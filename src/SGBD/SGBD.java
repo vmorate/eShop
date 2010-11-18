@@ -7,106 +7,115 @@ import cajonSastre.CajonSastre;
 
 public final class SGBD {
 	private final static String DRIVER_CLASS_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
-	private final static String DRIVER_URL = "jdbc:derby:/home/franxesk/Universidad/LabProg/eShop/bd; create=true; user=admin; password=1234";
+	private final static String DRIVER_URL = "jdbc:derby:C:\\Users\\Familia Merino\\Documents\\Universidad\\Carrera\\LabProg\\eShop\\bd; create=true; user=admin; password=1234";
 	private final static String USER = "admin";
 	private final static String PASSWORD = "1234";
 
-	private static Connection conn = null;
-	private static Statement stmt = null;
+	private Connection conn;
+	private Statement stmt;
 
 
-	private SGBD () {
+	public SGBD () {
 
 	}
 
 	private static void createConnection () {
 		try {
-			Class.forName(DRIVER_CLASS_NAME).newInstance();
+			Class.forName(DRIVER_CLASS_NAME);
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace(System.err);
+		catch (ClassNotFoundException e1) {
+			e1.printStackTrace(System.err);
 		}
 	}
 
-	private final static Connection getConnection() {
+	private final void getConnection() {
 		try {
-			conn = DriverManager.getConnection(DRIVER_URL, USER, PASSWORD);
+			this.conn = DriverManager.getConnection(DRIVER_URL, USER, PASSWORD);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		return conn;
-
 	}
 
 	private ArrayList<String> consultarProducto (String parametros) {
 		ArrayList<String> listado = new ArrayList<String>();
 		ResultSet results;
 		try {
-			stmt = conn.createStatement();
+			this.stmt = this.conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
 
 			if (argumentos[3].compareTo("Pelicula") == 0) {
 				if (argumentos[4].compareTo("DVD") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.PELICULA PE WHERE (PR.idProducto == PE.idProducto" +
-				                                "AND PE.Soporte == 'DVD')");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.PELICULA WHERE (ESHOP.PRODUCTO.idProducto" +
+												"= ESHOP.PELICULA.idProducto AND" +
+												"ESHOP.PELICULA.Soporte = 'DVD')");
 				}
 				else if (argumentos[4].compareTo("BR") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.PELICULA PE WHERE (PR.idProducto == PE.idProducto" +
-				                                "AND PE.Soporte == 'DVD')");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.PELICULA WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.PELICULA.idProducto AND ESHOP.PELICULA" +
+				                                ".Soporte = 'DVD')");
 				}
 				else {// Queremos consultar el listado de TODAS las peliculas
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.PELICULA VJ WHERE (PR.idProducto == PE.idProducto)");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.PELICULA WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.PELICULA.idProducto)");
 				}
 			}
 			else if (argumentos[3].compareTo("Videojuego") == 0) {
 			    if (argumentos[4].compareTo("PC") == 0) {
-			    	results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.VIDEOJUEGO VJ WHERE (PR.idProducto == VJ.idProducto" +
-				                                "AND VJ.Plataforma == 'PC')");
+			    	results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.VIDEOJUEGO.idProducto AND ESHOP.VIDEOJUEGO" +
+				                                ".Plataforma = 'PC')");
 			    }
 				else if (argumentos[4].compareTo("PS3") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.VIDEOJUEGO VJ WHERE (PR.idProducto == VJ.idProducto" +
-				                                "AND VJ.Plataforma == 'PS3')");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.VIDEOJUEGO.idProducto AND ESHOP.VIDEOJUEGO" +
+				                                ".Plataforma = 'PS3')");
 				}
 				else if (argumentos[4].compareTo("PSP") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +  
-				                                "ESHOP.VIDEOJUEGO VJ WHERE (PR.idProducto == VJ.idProducto" +
-				                                "AND VJ.Plataforma == 'PSP')");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +  
+				                                "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.VIDEOJUEGO.idProducto AND ESHOP.VIDEOJUEGO" +
+				                                ".Plataforma = 'PSP')");
 				}
 				else if (argumentos[4].compareTo("Wii") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.VIDEOJUEGO VJ WHERE (PR.idProducto == VJ.idProducto" +
-				                                "AND VJ.Plataforma == 'Wii')");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.VIDEOJUEGO.idProducto AND ESHOP.VIDEOJUEGO" +
+				                                ".Plataforma = 'Wii')");
 				}
 				else if (argumentos[4].compareTo("NDS") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.VIDEOJUEGO VJ WHERE (PR.idProducto == VJ.idProducto" +
-				                                "AND VJ.Plataforma == 'NDS')");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.VIDEOJUEGO.idProducto AND ESHOP.VIDEOJUEGO" +
+				                                ".Plataforma = 'NDS')");
 				}
 				else if (argumentos[4].compareTo("Xbox") == 0) {
-				    results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.VIDEOJUEGO VJ WHERE (PR.idProducto == VJ.idProducto" +
-				                                "AND VJ.Plataforma == 'Xbox')");
+				    results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.VIDEOJUEGO.idProducto AND ESHOP.VIDEOJUEGO" +
+				                                ".Plataforma = 'Xbox')");
 				}
 				else { // Queremos consultar el listado de TODOS los videojuegos
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
-				                                "ESHOP.VIDEOJUEGO VJ WHERE (PR.idProducto == VJ.idProducto)");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
+				                                "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.idProducto" +
+				                                "= ESHOP.VIDEOJUEGO.idProducto)");
 				}
 			}
 			else { // Queremos consultar el resultado de TODOS los productos
-				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR, ESHOP PELICULA PE," +
-				                            "ESHOP.VIDEOJUEGO VJ WHERE (PR.idProducto == VJ.idProducto" +
-	                                        "OR PR.idProducto == PE.idProducto)");
+				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO, ESHOP.PELICULA," +
+				                            "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.idProducto" +
+				                            "= ESHOP.VIDEOJUEGO.idProducto OR ESHOP.PRODUCTO.idProducto" +
+				                            "= ESHOP.PELICULA.idProducto)");
 			}
 			ResultSetMetaData rsmd = results.getMetaData();
 			int numCols = rsmd.getColumnCount();
 
-			if (numCols == 14) { // Trabajamos con Peliculas
+			if (numCols == 18) { // Trabajamos con Peliculas
 
 				while (results.next()) {
 					int idProducto = results.getInt(1);
@@ -131,6 +140,7 @@ public final class SGBD {
 					listado.add(Integer.toString(Fecha));
 					String Sinopsis = results.getString(11);
 					listado.add(Sinopsis);
+					listado.add("#$#");
 				}
 			}
 			return listado;
@@ -143,10 +153,13 @@ public final class SGBD {
 
 	public void iniSGBD () {
 		createConnection();
+		getConnection();
+		
 	}
 
 	public ArrayList<String> Consultar (String objeto, String usuario, String parametros) {
 		ArrayList<String> foo = new ArrayList<String>();
+		foo = consultarProducto(parametros);
 		return foo;
 	}
 
