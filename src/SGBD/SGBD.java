@@ -10,15 +10,15 @@ public final class SGBD {
 	private final static String DRIVER_URL = "jdbc:derby:/home/franxesk/Universidad/LabProg/eShop/bd; create=true; user=admin; password=1234";
 	private final static String USER = "admin";
 	private final static String PASSWORD = "1234";
-	
+
 	private static Connection conn = null;
 	private static Statement stmt = null;
-	
+
 
 	private SGBD () {
-		
+
 	}
-	
+
 	private static void createConnection () {
 		try {
 			Class.forName(DRIVER_CLASS_NAME).newInstance();
@@ -27,7 +27,7 @@ public final class SGBD {
 			e.printStackTrace(System.err);
 		}
 	}
-	
+
 	private final static Connection getConnection() {
 		try {
 			conn = DriverManager.getConnection(DRIVER_URL, USER, PASSWORD);
@@ -36,16 +36,16 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		return conn;
-		
+
 	}
-	
+
 	private ArrayList<String> consultarProducto (String parametros) {
 		ArrayList<String> listado = new ArrayList<String>();
 		ResultSet results;
 		try {
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
-				
+
 			if (argumentos[3].compareTo("Pelicula") == 0) {
 				if (argumentos[4].compareTo("DVD") == 0) {
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO PR," +
@@ -105,9 +105,9 @@ public final class SGBD {
 			}
 			ResultSetMetaData rsmd = results.getMetaData();
 			int numCols = rsmd.getColumnCount();
-				
+
 			if (numCols == 14) { // Trabajamos con Peliculas
-			
+
 				while (results.next()) {
 					int idProducto = results.getInt(1);
 				    listado.add(Integer.toString(idProducto));
@@ -140,24 +140,24 @@ public final class SGBD {
 		}
 		return listado;
 	}
-	
+
 	public void iniSGBD () {
 		createConnection();
 	}
-	
+
 	public ArrayList<String> Consultar (String objeto, String usuario, String parametros) {
 		ArrayList<String> foo = new ArrayList<String>();
 		return foo;
 	}
-		
+
 	public int Anyadir (String objeto, String usuario, String parametros) {
 		return 0;
 	}
-		
+
 	public int Eliminar (String objeto, String usuario, String parametros) {
 		return 0;
 	}
-		
+
 	public int Modificar (String objeto, String usuario, String parametros) {
 		return 0;
 	}
