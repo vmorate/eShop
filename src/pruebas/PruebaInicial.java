@@ -7,9 +7,8 @@ public final class PruebaInicial {
 	public static void main (String[] args) {
 	try{ 
 			/* Get a connection. */ 
-			SGBD SGBD = new SGBD();
 			SGBD.iniSGBD();
-			ArrayList<String> bar = new ArrayList<String>();
+			ArrayList<String> bar = null; 
 			bar = SGBD.Consultar("Objeto","Usuario","Prueba1#Prueba1#TODO#TODO");
 			int numT = bar.size();
 			int j = 1;
