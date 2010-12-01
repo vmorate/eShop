@@ -27,18 +27,22 @@ public final class PruebaInicial {
 	}
 	
 	public static void main (String[] args) {
-		boolean insercionProductos = false;
-		boolean insercionClientes = false;
-		boolean insercionPedido = false;
-		boolean insercionProductosPedido = false;
+		boolean insercionProductos = true;
+		boolean insercionClientes = true;
+		boolean insercionPedido = true;
+		boolean insercionProductosPedido = true;
+		boolean modificacionProductos = true;
+		boolean modificacionClientes = true;
+		boolean modificacionPedido = true;
+		boolean modificacionProductosPedido = true;
 		boolean eliminacionProductos = true;
 		boolean eliminacionClientes = false;
-		boolean eliminacionPedido = false;
-		boolean eliminacionProductosPedido = false;
-		boolean listadoProductos = false;
-		boolean listadoClientes = false;
-		boolean listadoPedidos = false;
-		boolean listadoProductosPedido = false;
+		boolean eliminacionPedido = true;
+		boolean eliminacionProductosPedido = true;
+		boolean listadoProductos = true;
+		boolean listadoClientes = true;
+		boolean listadoPedidos = true;
+		boolean listadoProductosPedido = true;
 		try{ 
 			ArrayList<String> bar = null;
 			int value;
@@ -139,6 +143,14 @@ public final class PruebaInicial {
 				else {
 					System.out.print("Insercion exitosa\n");
 				}
+				String pedido3 = new String("3#1234ABCD5678EFGH90IJ#123654#312654#Direccion3#Nombre3#Estado3#123459876#2");
+				value = SGBD.anyadir("Pedido","Administrador",pedido3);
+				if (value == -1) {
+					System.out.print("Fallo de insercion\n");
+				}
+				else {
+					System.out.print("Insercion exitosa\n");
+				}
 			}
 			if (listadoPedidos) {
 				System.out.print("Consultamos todos los pedidos\n");
@@ -160,21 +172,29 @@ public final class PruebaInicial {
 			}
 			if (insercionProductosPedido) {
 				System.out.print("Iniciamos la insercion de productos asociados a pedidos...\n");
-				String productosPedido1 = new String("1#4321#3");
+				String productosPedido1 = new String("1#4#3");
 				value = SGBD.anyadir("ProductosPedido","Administrador",productosPedido1);
 				if (value == -1) {
-					System.out.print("Fallo de insercion\n");
+					System.out.print("Fallo de inclusion\n");
 				}
 				else {
-					System.out.print("Insercion exitosa\n");
+					System.out.print("Inclusion exitosa\n");
 				}
-				String productosPedido2 = new String("2#1234#5");
+				String productosPedido2 = new String("2#2#5");
 				value = SGBD.anyadir("ProductosPedido","Administrador",productosPedido2);
 				if (value == -1) {
-					System.out.print("Fallo de insercion\n");
+					System.out.print("Fallo de inclusion\n");
 				}
 				else {
-					System.out.print("Insercion exitosa\n");
+					System.out.print("Inclusion exitosa\n");
+				}
+				String productosPedido3 = new String("2#4#7");
+				value = SGBD.anyadir("ProductosPedido","Administrador",productosPedido3);
+				if (value == -1) {
+					System.out.print("Fallo de inclusion\n");
+				}
+				else {
+					System.out.print("Inclusion exitosa\n");
 				}
 			}
 			if (listadoProductosPedido) {
@@ -182,44 +202,88 @@ public final class PruebaInicial {
 				bar = SGBD.consultar("ProductosPedido","Administrador","");
 				listado(bar);
 			}
-			if (eliminacionProductos) {
-				System.out.print("Iniciamos la eliminacion de productos...\n");
-				value = SGBD.eliminar("Producto","Administrador","1234");
+			if (modificacionProductos) {
+				System.out.print("Iniciamos la modificacion de productos...\n");
+				String pelicula1 = new String("1#F#20#0#0#45#Genero1#Titulo1#/dir/primero#123456#Sinopsis1#BR#Director1#Actor1, Actor2, Actor5");
+				value = SGBD.modificar("Pelicula","Administrador",pelicula1);
 				if (value == -1) {
-					System.out.print("Fallo de insercion\n");
+					System.out.print("Fallo de modificacion\n");
 				}
 				else {
-					System.out.print("Insercion exitosa\n");
+					System.out.print("Modificacion exitosa\n");
+				}
+			}
+			if (modificacionClientes) {
+				System.out.print("Iniciamos la modificacion de clientes...\n");
+				String cliente1 = new String("2#1#Password1#V#Apellido1#Nombre1#123456789#Direccion1#Telefono1#Email1#10");
+				value = SGBD.modificar("Cliente","Administrador",cliente1);
+				if (value == -1) {
+					System.out.print("Fallo de modificacion\n");
+				}
+				else {
+					System.out.print("Modificacion exitosa\n");
+				}
+			}
+			if (modificacionPedido) {
+				System.out.print("Iniciamos la modificacion de pedidos...\n");
+				String pedido1 = new String("2#1234567890987654321A#123654#123456#Direccion1#Nombre1#Estado1#12345678V#1");
+				value = SGBD.modificar("Pedido","Administrador",pedido1);
+				if (value == -1) {
+					System.out.print("Fallo de modificacion\n");
+				}
+				else {
+					System.out.print("Modificacion exitosa\n");
+				}
+			}
+			if (modificacionProductosPedido) {
+				System.out.print("Iniciamos la modificacion de productos asociados a pedidos...\n");
+				String productosPedido1 = new String("1#4#9");
+				value = SGBD.modificar("ProductosPedido","Administrador",productosPedido1);
+				if (value == -1) {
+					System.out.print("Fallo de modificacion\n");
+				}
+				else {
+					System.out.print("Modificacion exitosa\n");
+				}
+			}
+			if (eliminacionProductos) {
+				System.out.print("Iniciamos la eliminacion de productos...\n");
+				value = SGBD.eliminar("Producto","Administrador","3");
+				if (value == -1) {
+					System.out.print("Fallo de eliminacion\n");
+				}
+				else {
+					System.out.print("Eliminacion exitosa\n");
 				}
 			}
 			if (eliminacionClientes) {
 				System.out.print("Iniciamos la eliminacion de clientes...\n");
 				value = SGBD.eliminar("Cliente","Administrador","1");
 				if (value == -1) {
-					System.out.print("Fallo de insercion\n");
+					System.out.print("Fallo de eliminacion\n");
 				}
 				else {
-					System.out.print("Insercion exitosa\n");
+					System.out.print("Eliminacion exitosa\n");
 				}
 			}
 			if (eliminacionPedido) {
 				System.out.print("Iniciamos la eliminacion de pedidos...\n");
-				value = SGBD.eliminar("Pedido","Administrador","1");
+				value = SGBD.eliminar("Pedido","Administrador","3");
 				if (value == -1) {
-					System.out.print("Fallo de insercion\n");
+					System.out.print("Fallo de eliminacion\n");
 				}
 				else {
-					System.out.print("Insercion exitosa\n");
+					System.out.print("Eliminacion exitosa\n");
 				}
 			}
 			if (eliminacionProductosPedido) {
 				System.out.print("Iniciamos la eliminacion de productos asociados a pedidos...\n");
-				value = SGBD.eliminar("ProductosPedido","Administrador","1234");
+				value = SGBD.eliminar("ProductosPedido","Administrador","2#4");
 				if (value == -1) {
-					System.out.print("Fallo de insercion\n");
+					System.out.print("Fallo de eliminacion\n");
 				}
 				else {
-					System.out.print("Insercion exitosa\n");
+					System.out.print("Eliminacion exitosa\n");
 				}
 			}
 		}

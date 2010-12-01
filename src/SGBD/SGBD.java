@@ -34,8 +34,7 @@ public final class SGBD {
 		}
 	}
 	
-	private static void closeRS_STMT_CON(ResultSet rs, Statement stmt,
-            Connection con) {
+	private static void closeRS_STMT_CON(ResultSet rs, Statement stmt, Connection con) {
 		if (rs != null) {
             try {
             	rs.close();
@@ -62,8 +61,7 @@ public final class SGBD {
 		}
 	}
 	
-	private static void closeSTMT_CON(Statement stmt,
-            Connection con) {
+	private static void closeSTMT_CON(Statement stmt, Connection con) {
 		if (stmt != null) {
             try {
             	stmt.close();
@@ -432,13 +430,13 @@ public final class SGBD {
 			getConnection();
 			stmt = conn.createStatement();
 			results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-				                                "WHERE (ESHOP.PEDIDO.IDPEDIDO" +
-												"=" + idPedido + ")");
+				                        "WHERE (ESHOP.PEDIDO.IDPEDIDO" +
+										"='" + idPedido + "')");
 			if (results.next()) {
-				return false;
+				return true;
 			}
 			else {
-				return true;
+				return false;
 			}
 		}
 		catch (SQLException e) {
@@ -687,149 +685,33 @@ public final class SGBD {
 		}
 		return -1;
 	}
-	
-	private static int eliminarProducto (String usuario, String parametros) {
-		Statement stmt = null;
-		try {
-			if (usuario.compareTo("Administrador") == 0) {
-				getConnection();
-				stmt = conn.createStatement();
-				String argumentos[] = CajonSastre.CortarString(parametros);
-				stmt.executeUpdate("DELETE FROM ESHOP.PELICULA " +
-						   "WHERE (ESHOP.PELICULA.IDPRODUCTO='" +
-						   argumentos[0] + "')");
-				stmt.executeUpdate("DELETE FROM ESHOP.VIDEOJUEGO " +
-		   				   "WHERE (ESHOP.VIDEOJUEGO.IDPRODUCTO='" +
-		   				   argumentos[0] + "')");
-				stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTO " +
-								   "WHERE (ESHOP.PRODUCTO.IDPRODUCTO='" +
-								   argumentos[0] + "')");
-				return 0;
-			}
-			else {
-				return -1;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			closeSTMT_CON(stmt,conn);
-		}
-		return -1;
-	}
-	
-	private static int eliminarCliente (String usuario, String parametros) {
-		Statement stmt = null;
-		try {
-			if (usuario.compareTo("Administrador") == 0) {
-				getConnection();
-				stmt = conn.createStatement();
-				String argumentos[] = CajonSastre.CortarString(parametros);
-				stmt.executeUpdate("DELETE FROM ESHOP.USUARIO " +
-								   "WHERE (ESHOP.USUARIO.IDUSUARIO='" +
-								   argumentos[0] + "')");
-				return 0;
-			}
-			else {
-				return -1;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			closeSTMT_CON(stmt,conn);
-		}
-		return -1;
-	}
-	
-	private static int eliminarPedido (String usuario, String parametros) {
-		Statement stmt = null;
-		try {
-			if (usuario.compareTo("Administrador") == 0) {
-				getConnection();
-				stmt = conn.createStatement();
-				String argumentos[] = CajonSastre.CortarString(parametros);
-				stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO " +
-								   "WHERE (ESHOP.PEDIDO.IDPEDIDO='" +
-								   argumentos[0] + "')");
-				
-				if (eliminarProductosPedido_PE(parametros) == 0) {
-					return 0;
-				}
-				else {
-					return -1;
-				}
-			}
-			else {
-				return -1;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			closeSTMT_CON(stmt,conn);
-		}
-		return -1;
-	}
 
-	private static int eliminarProductosPedido_PE (String parametros) {
-		Statement stmt = null;
-		try {
-			getConnection();
-			stmt = conn.createStatement();
-			String argumentos[] = CajonSastre.CortarString(parametros);
-			stmt.executeUpdate("DELETE FROM ESHOP.PEDIDOSPRODUCTO " +
-					   		   "WHERE (ESHOP.PEDIDOSPRODUCTO.IDPEDIDO='" +
-					   		   argumentos[0] +"')");
-			return 0;
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			closeSTMT_CON(stmt,conn);
-		}
-		return -1;
-	}
-	
-	private static int eliminarProductosPedido_PR (String usuario, String parametros) {
-		Statement stmt = null;
-		try {
-			getConnection();
-			stmt = conn.createStatement();
-			String argumentos[] = CajonSastre.CortarString(parametros);
-			stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO" +
-					   		   "WHERE ((ESHOP.PRODUCTOSPEDIDO.IDPEDIDO='" + argumentos[0] +
-					   		   "') AND (ESHOP.PEDIDOSPRODUCTO.IDPRODUCTO='" + argumentos[1] + "'))");
-			return 0;
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			closeSTMT_CON(stmt,conn);
-		}
-		return -1;
-	}
-	
-	private static int modificarProducto (String usuario, String parametros) {
+	private static int modificarProducto (String tipo, String usuario, String parametros) {
 		Statement stmt = null;
 		try {
 			if (usuario.compareTo("Administrador") == 0) {
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
-				stmt.executeUpdate("UPDATE FROM ESHOP.PRODUCTO"+
+				stmt.executeUpdate("UPDATE ESHOP.PRODUCTO " +
 						   		   "SET AGOTADO='" + argumentos[1] + "', EJEMPLARES=" +
 						   		   argumentos[2] + ", PUNTUACION=" + argumentos[3] +
 						   		   ", NUMVOTOS=" + argumentos[4] + ", PRECIOUD=" +
 						   		   argumentos[5] + ", GENERO='" + argumentos[6] + "', TITULO='" +
 						   		   argumentos[7] + "', FICHERO='" + argumentos[8] + "', FECHA=" +
 						   		   argumentos[9] + ", SINOPSIS='" + argumentos[10] +
-						   		   "' WHERE (IDPRODUCTO='" + argumentos[0] + "')");			
+						   		   "' WHERE (IDPRODUCTO='" + argumentos[0] + "')");
+				if (tipo.compareTo("Pelicula") == 0) {
+					stmt.executeUpdate("UPDATE ESHOP.PELICULA " +
+									   "SET SOPORTE='" + argumentos[11] + "', DIRECTOR='" +
+									   argumentos[12] + "', ACTORES='" + argumentos[13] + "'" +
+									   "WHERE (IDPRODUCTO='" + argumentos[0] + "')");
+				}
+				else { // Videojuegos
+					stmt.executeUpdate("UPDATE ESHOP.VIDEOJUEGO " +
+									   "SET PLATAFORMA='" + argumentos[11] + "', COMPANYA='" +
+									   argumentos[12] + "' WHERE (IDPRODUCTO='" + argumentos[0] + "')");
+				}
 				return 0;
 			}
 			else {
@@ -852,7 +734,7 @@ public final class SGBD {
 			if ((usuario.compareTo("Administrador") == 0) || (argumentos[0].compareTo(argumentos[1]) == 0)) {
 				getConnection();
 				stmt = conn.createStatement();
-				stmt.executeUpdate("UPDATE FROM ESHOP.CLIENTE"+
+				stmt.executeUpdate("UPDATE ESHOP.USUARIO " +
 				  				   "SET PASSWORD='" + argumentos[2] + "', ADMINISTRADOR='" +
 				   				   argumentos[3] + "', APELLIDOS='" + argumentos[4] +
 				   				   "', NOMBRE='" + argumentos[5] + "', NIF='" +
@@ -882,10 +764,10 @@ public final class SGBD {
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
-				stmt.executeUpdate("UPDATE FROM ESHOP.CLIENTE"+
-						   		   "SET NUMCUENTA='" + argumentos[1] + "', FECHAPEDIDO='" +
-						   		   argumentos[2] + "', FCADUCIDAD='" + argumentos[3] +
-						   		   "', DIRECCION='" + argumentos[4] + "', NOMBRE_CL='" +
+				stmt.executeUpdate("UPDATE ESHOP.PEDIDO " +
+						   		   "SET NUMCUENTA='" + argumentos[1] + "', FECHAPEDIDO=" +
+						   		   argumentos[2] + ", FCADUCIDAD=" + argumentos[3] +
+						   		   ", DIRECCION='" + argumentos[4] + "', NOMBRE_CL='" +
 						   		   argumentos[5] + "', ESTADO='" + argumentos[6] +
 						   		   "', CIF_NIF='" + argumentos[7] + "' WHERE (IDPEDIDO='" +
 						   		   argumentos[0] + "')");
@@ -911,14 +793,13 @@ public final class SGBD {
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
-				stmt.executeUpdate("UPDATE FROM ESHOP.PRODUCTOSPEDIDO"+
+				stmt.executeUpdate("UPDATE ESHOP.PRODUCTOSPEDIDO " +
 								   "SET CANTIDAD=" + argumentos[2] + " WHERE ((IDPEDIDO='" +
 								   argumentos[0] + "') AND (IDPRODUCTO='" + argumentos[1] +"'))");
-				
 				if (Integer.parseInt(argumentos[2]) == 0) {
 					eliminarProductosPedido_PR(usuario, parametros);
 				}
-				if (consultarIDPedido(argumentos[0])) {
+				if (!(consultarIDPedido(argumentos[0]))) {
 					eliminarPedido(usuario, argumentos[0]);
 				}
 				return 0;
@@ -926,6 +807,158 @@ public final class SGBD {
 			else {
 				return -1;
 			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeSTMT_CON(stmt,conn);
+		}
+		return -1;
+	}
+	
+	private static int eliminarProducto (String usuario, String parametros) {
+		Statement stmt = null;
+		try {
+			if (usuario.compareTo("Administrador") == 0) {
+				getConnection();
+				stmt = conn.createStatement();
+				String argumentos[] = CajonSastre.CortarString(parametros);
+				stmt.executeUpdate("DELETE FROM ESHOP.PELICULA " +
+						   		   "WHERE (ESHOP.PELICULA.IDPRODUCTO='" +
+						   		   argumentos[0] + "')");
+				stmt.executeUpdate("DELETE FROM ESHOP.VIDEOJUEGO " +
+		   				    	   "WHERE (ESHOP.VIDEOJUEGO.IDPRODUCTO='" +
+		   				    	   argumentos[0] + "')");
+				stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTO " +
+								   "WHERE (ESHOP.PRODUCTO.IDPRODUCTO='" +
+								   argumentos[0] + "')");
+				return 0;
+			}
+			else {
+				return -1;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeSTMT_CON(stmt,conn);
+		}
+		return -1;
+	}
+	
+	private static int eliminarCliente (String usuario, String parametros) {
+		ResultSet results = null;
+		Statement stmt = null;
+		ArrayList<String> bar = null;
+		try {
+			if (usuario.compareTo("Administrador") == 0) {
+				bar = new ArrayList<String>();
+				getConnection();
+				stmt = conn.createStatement();
+				String argumentos[] = CajonSastre.CortarString(parametros);
+				results = stmt.executeQuery("SELECT ESHOP.PEDIDO.IDPEDIDO FROM ESHOP.PEDIDO," +
+											"ESHOP.PRODUCTOSPEDIDO " +
+											"WHERE ((ESHOP.PEDIDO.IDUSUARIO='" + argumentos[0] +
+							      			"') AND (ESHOP.PRODUCTOSPEDIDO.IDPEDIDO=ESHOP.PEDIDO.IDPEDIDO))");
+				int i = 1;
+				while (results.next()) {
+					String idPedido = results.getString(i);
+					bar.add(idPedido);
+				}
+				for (i = 0; i < bar.size(); i++) {
+					stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO " +
+									   "WHERE (ESHOP.PEDIDO.IDPEDIDO='" +
+									   bar.get(i) + "')");
+				}
+				for (i = 0; i < bar.size(); i++) {
+					stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO " +
+									   "WHERE (ESHOP.PEDIDO.IDPEDIDO='" +
+									   bar.get(i) + "')");
+				}
+				stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO " +
+								   "WHERE (ESHOP.PEDIDO.IDUSUARIO ='" +
+								   argumentos[0] + "')");
+				stmt.executeUpdate("DELETE FROM ESHOP.USUARIO " +
+								   "WHERE (ESHOP.USUARIO.IDUSUARIO='" +
+								   argumentos[0] + "')");
+				return 0;
+			}
+			else {
+				return -1;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeSTMT_CON(stmt,conn);
+		}
+		return -1;
+	}
+	
+	private static int eliminarPedido (String usuario, String parametros) {
+		Statement stmt = null;
+		try {
+			if (usuario.compareTo("Administrador") == 0) {
+				getConnection();
+				stmt = conn.createStatement();
+				String argumentos[] = CajonSastre.CortarString(parametros);
+				if (eliminarProductosPedido_PE(parametros) == 0) {
+					stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO " +
+							   "WHERE (ESHOP.PEDIDO.IDPEDIDO='" +
+							   argumentos[0] + "')");
+					return 0;
+				}
+				else {
+					return -1;
+				}
+
+			}
+			else {
+				return -1;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeSTMT_CON(stmt,conn);
+		}
+		return -1;
+	}
+
+	private static int eliminarProductosPedido_PE (String parametros) {
+		Statement stmt = null;
+		try {
+			getConnection();
+			stmt = conn.createStatement();
+			String argumentos[] = CajonSastre.CortarString(parametros);
+			stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO " +
+					   		   "WHERE (ESHOP.PRODUCTOSPEDIDO.IDPEDIDO='" +
+					   		   argumentos[0] +"')");
+			return 0;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeSTMT_CON(stmt,conn);
+		}
+		return -1;
+	}
+	
+	private static int eliminarProductosPedido_PR (String usuario, String parametros) {
+		Statement stmt = null;
+		try {
+			getConnection();
+			stmt = conn.createStatement();
+			String argumentos[] = CajonSastre.CortarString(parametros);
+			stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO " +
+					   		   "WHERE ((ESHOP.PRODUCTOSPEDIDO.IDPEDIDO='" + argumentos[0] +
+					   		   "') AND (ESHOP.PRODUCTOSPEDIDO.IDPRODUCTO='" + argumentos[1] + "'))");
+			return 0;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -974,27 +1007,11 @@ public final class SGBD {
 		return value;
 	}
 
-	public static int eliminar (String objeto, String usuario, String parametros) {
-		int value;
-		
-		if (objeto.compareTo("Producto") == 0) {
-			value = eliminarProducto(usuario, parametros);
-		}
-		else if (objeto.compareTo("Cliente") == 0) {
-			value = eliminarCliente(usuario, parametros);
-		}
-		else { // Eliminamos Pedidos
-			value = eliminarPedido(usuario, parametros);
-		}
-		
-		return value;
-	}
-
 	public static int modificar (String objeto, String usuario, String parametros) {
 		int value;
 		
-		if (objeto.compareTo("Producto") == 0) {
-			value = modificarProducto(usuario, parametros);
+		if ((objeto.compareTo("Pelicula") == 0) || (objeto.compareTo("Videojuego") == 0)) {
+			value = modificarProducto(objeto,usuario, parametros);
 		}
 		else if (objeto.compareTo("Cliente") == 0) {
 			value = modificarCliente(usuario, parametros);
@@ -1008,4 +1025,24 @@ public final class SGBD {
 		
 		return value;
 	}
+	
+	public static int eliminar (String objeto, String usuario, String parametros) {
+		int value;
+		
+		if (objeto.compareTo("Producto") == 0) {
+			value = eliminarProducto(usuario, parametros);
+		}
+		else if (objeto.compareTo("Cliente") == 0) {
+			value = eliminarCliente(usuario, parametros);
+		}
+		else if (objeto.compareTo("Pedido") == 0) {
+			value = eliminarPedido(usuario, parametros);
+		}
+		else { // Eliminamos ProductosPedido
+			value = eliminarProductosPedido_PR(usuario, parametros);
+		}
+		
+		return value;
+	}
+
 }
