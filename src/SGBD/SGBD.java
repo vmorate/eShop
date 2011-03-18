@@ -93,73 +93,64 @@ public final class SGBD {
 			if (argumentos[0].compareTo("Pelicula") == 0) {
 				tipo = tipo.concat("Pelicula");
 				if (argumentos[1].compareTo("DVD") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.PELICULA WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-												"=ESHOP.PELICULA.IDPRODUCTO) AND (ESHOP.PELICULA." +
-												"SOPORTE='DVD'))");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.PELICULA AS PE WHERE ((PR.IDPRODUCTO" +
+												"=PE.IDPRODUCTO) AND (PE.SOPORTE='DVD'))");
 				}
 				else if (argumentos[1].compareTo("BR") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.PELICULA WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.PELICULA.IDPRODUCTO) AND (ESHOP.PELICULA" +
-				                                ".SOPORTE='BR'))");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.PELICULA AS PE WHERE ((PR.IDPRODUCTO" +
+				                                "=PE.IDPRODUCTO) AND (PE.SOPORTE='BR'))");
 				}
 				else {// Queremos consultar el listado de TODAS las peliculas
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.PELICULA WHERE (ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.PELICULA.IDPRODUCTO)");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.PELICULA AS PE WHERE (PR.IDPRODUCTO" +
+				                                "=PE.IDPRODUCTO)");
 				}
 			}
 			else if (argumentos[0].compareTo("Videojuego") == 0) {
 				tipo = tipo.concat("Videojuego");
 			    if (argumentos[1].compareTo("PC") == 0) {
-			    	results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.VIDEOJUEGO WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.VIDEOJUEGO.IDPRODUCTO) AND (ESHOP.VIDEOJUEGO" +
-				                                ".PLATAFORMA='PC'))");
+			    	results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
+				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='PC'))");
 			    }
 				else if (argumentos[1].compareTo("PS3") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.VIDEOJUEGO WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.VIDEOJUEGO.IDPRODUCTO) AND (ESHOP.VIDEOJUEGO" +
-				                                ".PLATAFORMA='PS3'))");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
+				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='PS3'))");
 				}
 				else if (argumentos[1].compareTo("PSP") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +  
-				                                "ESHOP.VIDEOJUEGO WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.VIDEOJUEGO.IDPRODUCTO) AND (ESHOP.VIDEOJUEGO" +
-				                                ".PLATAFORMA='PSP'))");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +  
+				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
+				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='PSP'))");
 				}
 				else if (argumentos[1].compareTo("Wii") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.VIDEOJUEGO WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.VIDEOJUEGO.IDPRODUCTO) AND (ESHOP.VIDEOJUEGO" +
-				                                ".PLATAFORMA='Wii'))");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
+				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='Wii'))");
 				}
 				else if (argumentos[1].compareTo("NDS") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.VIDEOJUEGO WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.VIDEOJUEGO.IDPRODUCTO) AND (ESHOP.VIDEOJUEGO" +
-				                                ".PLATAFORMA='NDS'))");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
+				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='NDS'))");
 				}
 				else if (argumentos[1].compareTo("Xbox") == 0) {
-				    results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.VIDEOJUEGO WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.VIDEOJUEGO.IDPRODUCTO) AND (ESHOP.VIDEOJUEGO" +
-				                                ".PLATAFORMA='Xbox'))");
+				    results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
+				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='Xbox'))");
 				}
 				else { // Queremos consultar el listado de TODOS los videojuegos
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO," +
-				                                "ESHOP.VIDEOJUEGO WHERE (ESHOP.PRODUCTO.IDPRODUCTO" +
-				                                "=ESHOP.VIDEOJUEGO.IDPRODUCTO)");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
+				                                "ESHOP.VIDEOJUEGO AS VI WHERE (PR.IDPRODUCTO" +
+				                                "=VI.IDPRODUCTO)");
 				}
 			}
 			else { // Queremos consultar el resultado de TODOS los productos
 				tipo = tipo.concat("Todo");
-				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO, ESHOP.PELICULA," +
-				                            "ESHOP.VIDEOJUEGO WHERE ((ESHOP.PRODUCTO.IDPRODUCTO" +
-				                            "=ESHOP.VIDEOJUEGO.IDPRODUCTO) OR (ESHOP.PRODUCTO.IDPRODUCTO" +
-				                            "=ESHOP.PELICULA.IDPRODUCTO))");
+				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR, ESHOP.PELICULA AS PE," +
+				                            "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
+				                            "=VI.IDPRODUCTO) OR (PR.IDPRODUCTO=PE.IDPRODUCTO))");
 			}
 			while (results.next()) {
 				String idProducto = results.getString(1);
@@ -231,9 +222,8 @@ public final class SGBD {
 
 			if (usuario.compareTo("Cliente") == 0) {
 				String argumentos[] = CajonSastre.CortarString(parametros);
-				results = stmt.executeQuery("SELECT * FROM ESHOP.USUARIO " +
-				                                "WHERE (ESHOP.USUARIO.IDUSUARIO='" +
-				                                argumentos[2] + "')");
+				results = stmt.executeQuery("SELECT * FROM ESHOP.USUARIO AS US " +
+				                                "WHERE (US.IDUSUARIO='" + argumentos[2] + "')");
 			}
 			else {// Somos Admins, queremos consultar el listado de TODOS los clientes y admin
 					results = stmt.executeQuery("SELECT * FROM ESHOP.USUARIO");
@@ -283,27 +273,26 @@ public final class SGBD {
 			String argumentos[] = CajonSastre.CortarString(parametros);
 
 			if (usuario.compareTo("Cliente") == 0) {
-				results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-				                                "WHERE (ESHOP.PEDIDO.IDUSUARIO='" +
-				                                argumentos[2] + "')");
+				results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+				                                "WHERE (PE.IDUSUARIO='" + argumentos[2] + "')");
 			}
 			else {// Somos Admins, queremos consultar el listado de TODOS los pedidos
 				if (argumentos[3].compareTo("Fecha") == 0) {
 					if (!(argumentos[4].isEmpty())) { // Hay limite inferior
 						if (argumentos.length == 6) { // Hay limite superior
-							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-									"WHERE ((ESHOP.PEDIDO.FECHAPEDIDO>" + argumentos[4] +
-									") AND (ESHOP.PEDIDO.FECHAPEDIDO<" + argumentos[5] + "))");	
+							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+									"WHERE ((PE.FECHAPEDIDO>" + argumentos[4] +
+									") AND (PE.FECHAPEDIDO<" + argumentos[5] + "))");	
 						}
 						else { // Hay limite inferior, no hay superior
-							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-									"WHERE (ESHOP.PEDIDO.FECHAPEDIDO>" + argumentos[4] + ")");
+							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+									"WHERE (PE.FECHAPEDIDO>" + argumentos[4] + ")");
 						}
 					}
 					else { // No hay limite inferior
 						if (!(argumentos[5].isEmpty())) { // Hay limite superior
-							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-									"WHERE (ESHOP.PEDIDO.FECHAPEDIDO<" + argumentos[5] + ")");							
+							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+									"WHERE (PE.FECHAPEDIDO<" + argumentos[5] + ")");							
 						}
 						else { // No hay superior
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO");
@@ -313,19 +302,19 @@ public final class SGBD {
 				else if (argumentos[3].compareTo("Importe") == 0) {
 					if (!(argumentos[4].isEmpty())) { // Hay limite inferior
 						if (!(argumentos[5].isEmpty())) { // Hay limite superior
-							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-									"WHERE ((ESHOP.PEDIDO.IMPORTE>" + argumentos[4] +
-									") AND (ESHOP.PEDIDO.IMPORTE<" + argumentos[5] + "))");							
+							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+									"WHERE ((.PE.IMPORTE>" + argumentos[4] +
+									") AND (PE.IMPORTE<" + argumentos[5] + "))");							
 						}
 						else { // Hay limite inferior, no hay superior
-							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-									"WHERE (ESHOP.PEDIDO.IMPORTE>" + argumentos[4] + ")");
+							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+									"WHERE (PE.IMPORTE>" + argumentos[4] + ")");
 						}
 					}
 					else { // No hay limite inferior
 						if (!(argumentos[5].isEmpty())) { // Hay limite superior
-							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-									"WHERE (ESHOP.PEDIDO.IMPORTE<" + argumentos[5] + ")");							
+							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+									"WHERE (PE.IMPORTE<" + argumentos[5] + ")");							
 						}
 						else { // No hay limite superior
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO");
@@ -333,14 +322,12 @@ public final class SGBD {
 					}
 				}
 				else if (argumentos[3].compareTo("Estado") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-												"WHERE (ESHOP.PEDIDO.ESTADO='" +
-												argumentos[4] + "')");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+												"WHERE (PE.ESTADO='" + argumentos[4] + "')");
 				}
 				else if (argumentos[3].compareTo("Cliente") == 0) {
-					results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-												"WHERE (ESHOP.PEDIDO.IDUSUARIO='" +
-												argumentos[4] + "')");
+					results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+												"WHERE (PE.IDUSUARIO='" + argumentos[4] + "')");
 				}
 				else { //
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO");
@@ -389,18 +376,19 @@ public final class SGBD {
 			String argumentos[] = CajonSastre.CortarString(parametros);
 
 			if (usuario.compareTo("Cliente") == 0) {
-				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO, ESHOP.PEDIDO," +
-											"ESHOP.CLIENTE WHERE ((ESHOP.PRODUCTOSPEDIDO.IDPEDIDO" +
-											"=ESHOP.PEDIDO.IDPEDIDO) AND (ESHOP.PEDIDO.IDUSUARIO='" +
+				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO AS PP, ESHOP.PEDIDO AS PE," +
+											"ESHOP.CLIENTE AS CL WHERE ((PP.IDPEDIDO" +
+											"=PE.IDPEDIDO) AND (PE.IDUSUARIO='" +
 											argumentos[0] + "'))");
 			}
-			else if (argumentos.length == 2) { // Somos Admins, queremos consultar el listado de productos asociados a un pedido concreto
-				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO, ESHOP.PEDIDO " +
-											"WHERE (ESHOP.PRODUCTOSPEDIDO.IDPEDIDO='" + argumentos[1] + "')");
+			// Somos Admins, queremos consultar el listado de productos asociados a un pedido concreto
+			else if (argumentos.length == 2) {
+				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO AS PP " +
+											"WHERE (PP.IDPEDIDO='" + argumentos[1] + "')");
 			}
 			else { // Somos Admins, queremos el listado completo.
-				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO, ESHOP.PEDIDO " +
-						"WHERE (ESHOP.PRODUCTOSPEDIDO.IDPEDIDO=ESHOP.PEDIDO.IDPEDIDO)");
+				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO AS PP, " + 
+						                    "ESHOP.PEDIDO AS PE WHERE (PP.IDPEDIDO=PE.IDPEDIDO)");
 			}
 			
 			while (results.next()) {
@@ -429,9 +417,8 @@ public final class SGBD {
 		try {
 			getConnection();
 			stmt = conn.createStatement();
-			results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO " +
-				                        "WHERE (ESHOP.PEDIDO.IDPEDIDO" +
-										"='" + idPedido + "')");
+			results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
+				                        "WHERE (PE.IDPEDIDO='" + idPedido + "')");
 			if (results.next()) {
 				return true;
 			}
@@ -824,15 +811,12 @@ public final class SGBD {
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
-				stmt.executeUpdate("DELETE FROM ESHOP.PELICULA " +
-						   		   "WHERE (ESHOP.PELICULA.IDPRODUCTO='" +
-						   		   argumentos[0] + "')");
-				stmt.executeUpdate("DELETE FROM ESHOP.VIDEOJUEGO " +
-		   				    	   "WHERE (ESHOP.VIDEOJUEGO.IDPRODUCTO='" +
-		   				    	   argumentos[0] + "')");
-				stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTO " +
-								   "WHERE (ESHOP.PRODUCTO.IDPRODUCTO='" +
-								   argumentos[0] + "')");
+				stmt.executeUpdate("DELETE FROM ESHOP.PELICULA AS PE " +
+						   		   "WHERE (PE.IDPRODUCTO='" + argumentos[0] + "')");
+				stmt.executeUpdate("DELETE FROM ESHOP.VIDEOJUEGO AS VI " +
+		   				    	   "WHERE (VI.IDPRODUCTO='" + argumentos[0] + "')");
+				stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTO AS PR " +
+								   "WHERE (PR.IDPRODUCTO='" + argumentos[0] + "')");
 				return 0;
 			}
 			else {
@@ -858,31 +842,27 @@ public final class SGBD {
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
-				results = stmt.executeQuery("SELECT ESHOP.PEDIDO.IDPEDIDO FROM ESHOP.PEDIDO," +
-											"ESHOP.PRODUCTOSPEDIDO " +
-											"WHERE ((ESHOP.PEDIDO.IDUSUARIO='" + argumentos[0] +
-							      			"') AND (ESHOP.PRODUCTOSPEDIDO.IDPEDIDO=ESHOP.PEDIDO.IDPEDIDO))");
+				results = stmt.executeQuery("SELECT PE.IDPEDIDO FROM ESHOP.PEDIDO AS PE," +
+											"ESHOP.PRODUCTOSPEDIDO AS PP " +
+											"WHERE ((PE.IDUSUARIO='" + argumentos[0] +
+							      			"') AND (PP.IDPEDIDO=PE.IDPEDIDO))");
 				int i = 1;
 				while (results.next()) {
 					String idPedido = results.getString(i);
 					bar.add(idPedido);
 				}
 				for (i = 0; i < bar.size(); i++) {
-					stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO " +
-									   "WHERE (ESHOP.PEDIDO.IDPEDIDO='" +
-									   bar.get(i) + "')");
+					stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO AS PP " +
+									   "WHERE (ESHOP.PP.IDPEDIDO='" + bar.get(i) + "')");
 				}
 				for (i = 0; i < bar.size(); i++) {
-					stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO " +
-									   "WHERE (ESHOP.PEDIDO.IDPEDIDO='" +
-									   bar.get(i) + "')");
+					stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO AS PE " +
+									   "WHERE (PE.IDPEDIDO='" + bar.get(i) + "')");
 				}
-				stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO " +
-								   "WHERE (ESHOP.PEDIDO.IDUSUARIO ='" +
-								   argumentos[0] + "')");
-				stmt.executeUpdate("DELETE FROM ESHOP.USUARIO " +
-								   "WHERE (ESHOP.USUARIO.IDUSUARIO='" +
-								   argumentos[0] + "')");
+				stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO AS PE " +
+								   "WHERE (PE.IDUSUARIO ='" + argumentos[0] + "')");
+				stmt.executeUpdate("DELETE FROM ESHOP.USUARIO AS US " +
+								   "WHERE (US.IDUSUARIO='" + argumentos[0] + "')");
 				return 0;
 			}
 			else {
@@ -906,9 +886,8 @@ public final class SGBD {
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
 				if (eliminarProductosPedido_PE(parametros) == 0) {
-					stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO " +
-							   "WHERE (ESHOP.PEDIDO.IDPEDIDO='" +
-							   argumentos[0] + "')");
+					stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO AS PE " +
+							   "WHERE (PE.IDPEDIDO='" + argumentos[0] + "')");
 					return 0;
 				}
 				else {
@@ -935,9 +914,8 @@ public final class SGBD {
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
-			stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO " +
-					   		   "WHERE (ESHOP.PRODUCTOSPEDIDO.IDPEDIDO='" +
-					   		   argumentos[0] +"')");
+			stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO AS PP " +
+					   		   "WHERE (PP.IDPEDIDO='" + argumentos[0] +"')");
 			return 0;
 		}
 		catch (SQLException e) {
@@ -955,9 +933,9 @@ public final class SGBD {
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
-			stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO " +
-					   		   "WHERE ((ESHOP.PRODUCTOSPEDIDO.IDPEDIDO='" + argumentos[0] +
-					   		   "') AND (ESHOP.PRODUCTOSPEDIDO.IDPRODUCTO='" + argumentos[1] + "'))");
+			stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO AS PP " +
+					   		   "WHERE ((PP.IDPEDIDO='" + argumentos[0] +
+					   		   "') AND (PP.IDPRODUCTO='" + argumentos[1] + "'))");
 			return 0;
 		}
 		catch (SQLException e) {
