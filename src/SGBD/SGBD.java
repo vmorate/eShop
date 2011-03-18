@@ -15,39 +15,38 @@ public final class SGBD {
 	private static Connection conn;
 
 	static {
-		try { 
+		try {
+			/** Cargamos el driver correspondiente para el JDBC.*/
 			Class.forName(DRIVER_CLASS_NAME);
 		} catch (ClassNotFoundException e) { 
 			e.printStackTrace(System.err);
 		}
 	}
 
-	private SGBD () {
-
-	}
-
 	private static void getConnection() throws SQLException {
+		/** Establecemos la conexión con el JDBC.*/
 		conn = DriverManager.getConnection(DRIVER_URL, USER, PASSWORD);
 	}
 	
 	private static void loadSQLScript(String file) throws SQLException {
+		/** Ejecutamos un script con sentencias SQL almacenado en el fichero 'file'.*/ 
     	String str = new String();
         StringBuffer sb = new StringBuffer();  
    
         try {
         	FileReader fr = new FileReader(new File(file));
-            BufferedReader br = new BufferedReader(fr);  
+            BufferedReader br = new BufferedReader(fr);
+            /** Leemos el contenido del fichero 'file'.*/
             while((str = br.readLine()) != null) {  
             	sb.append(str);
             }
             br.close();
-            // split each statement
+            /** Almacenamos por separado cada sentencia SQL.*/
             String[] inst = sb.toString().split(";");
             getConnection();
             Statement stmt = conn.createStatement();  
             for(int i = 0; i<inst.length; i++) {
-            	// ensure that there is no spaces before or after the request string  
-                // in order to not execute empty statements
+            	/** Nos aseguramos de que no se van a ejecutar sentencias vacias.*/
             	if(!inst[i].trim().equals("")) {
             		stmt.executeUpdate(inst[i]);
                     System.out.println(">>"+inst[i]);
@@ -63,6 +62,7 @@ public final class SGBD {
 	}
 	
     public static void resetDatabase() throws SQLException {
+    	/** Ejecutamos el script SQL que reinicializa la BD.*/
     	System.out.println("Lanzamos el script para resetear la BD");
     	try {
     		loadSQLScript("scripts/ResetBD.sql");
@@ -83,6 +83,7 @@ public final class SGBD {
     }
      
 	public static int setDriverURL(String directorio) {
+		/** Establecemos la URL del driver en funcion del valor de 'directorio'.*/
 		DRIVER_URL = "jdbc:derby:" + directorio + "; create=true; user=admin; password=1234";
 		try {
 			getConnection();
@@ -94,6 +95,7 @@ public final class SGBD {
 	}
 	
 	private static void closeRS_STMT_CON(ResultSet rs, Statement stmt, Connection con) {
+		/** Liberamos los recursos del JDBC previamente reservados.*/ 
 		if (rs != null) {
             try {
             	rs.close();
@@ -121,6 +123,7 @@ public final class SGBD {
 	}
 	
 	private static void closeSTMT_CON(Statement stmt, Connection con) {
+		/** Liberamos los recursos del JDBC previamente reservados.*/
 		if (stmt != null) {
             try {
             	stmt.close();
@@ -140,77 +143,90 @@ public final class SGBD {
 	}
 
 	private static ArrayList<String> consultarProducto (String parametros) {
+		/** Ejecutamos la consulta de productos correspondiente sobre la BD.*/
 		ArrayList<String> listado = new ArrayList<String>();
 		Statement stmt = null;
 		ResultSet results = null;
 		String tipo = new String("");
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
 
 			if (argumentos[0].compareTo("Pelicula") == 0) {
+				/** Queremos consultar las peliculas disponibles.*/
 				tipo = tipo.concat("Pelicula");
 				if (argumentos[1].compareTo("DVD") == 0) {
+					/** Queremos consultar las peliculas en DVD.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.PELICULA AS PE WHERE ((PR.IDPRODUCTO" +
 												"=PE.IDPRODUCTO) AND (PE.SOPORTE='DVD'))");
 				}
 				else if (argumentos[1].compareTo("BR") == 0) {
+					/** Queremos consultar las peliculas en BluRay.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.PELICULA AS PE WHERE ((PR.IDPRODUCTO" +
 				                                "=PE.IDPRODUCTO) AND (PE.SOPORTE='BR'))");
 				}
-				else {// Queremos consultar el listado de TODAS las peliculas
+				else {/** Queremos consultar el listado de TODAS las peliculas.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.PELICULA AS PE WHERE (PR.IDPRODUCTO" +
 				                                "=PE.IDPRODUCTO)");
 				}
 			}
 			else if (argumentos[0].compareTo("Videojuego") == 0) {
+				/** Queremos consultar los videojuegos disponibles.*/
 				tipo = tipo.concat("Videojuego");
 			    if (argumentos[1].compareTo("PC") == 0) {
+			    	/** Queremos consultar los videojuegos para PC.*/
 			    	results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
 				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='PC'))");
 			    }
 				else if (argumentos[1].compareTo("PS3") == 0) {
+					/** Queremos consultar los videojuegos para PlayStation 3.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
 				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='PS3'))");
 				}
 				else if (argumentos[1].compareTo("PSP") == 0) {
+					/** Queremos consultar los videojuegos para PlayStation Portable.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +  
 				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
 				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='PSP'))");
 				}
 				else if (argumentos[1].compareTo("Wii") == 0) {
+					/** Queremos consultar los videojuegos para Nintendo Wii.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
 				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='Wii'))");
 				}
 				else if (argumentos[1].compareTo("NDS") == 0) {
+					/** Queremos consultar los videojuegos para Nintendo DS.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
 				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='NDS'))");
 				}
 				else if (argumentos[1].compareTo("Xbox") == 0) {
+					/** Queremos consultar los videojuegos para Xbox 360.*/
 				    results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
 				                                "=VI.IDPRODUCTO) AND (VI.PLATAFORMA='Xbox'))");
 				}
-				else { // Queremos consultar el listado de TODOS los videojuegos
+				else { /** Queremos consultar el listado de TODOS los videojuegos.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR," +
 				                                "ESHOP.VIDEOJUEGO AS VI WHERE (PR.IDPRODUCTO" +
 				                                "=VI.IDPRODUCTO)");
 				}
 			}
-			else { // Queremos consultar el resultado de TODOS los productos
+			else { /** Queremos consultar el resultado de TODOS los productos.*/
 				tipo = tipo.concat("Todo");
 				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTO AS PR, ESHOP.PELICULA AS PE," +
 				                            "ESHOP.VIDEOJUEGO AS VI WHERE ((PR.IDPRODUCTO" +
 				                            "=VI.IDPRODUCTO) OR (PR.IDPRODUCTO=PE.IDPRODUCTO))");
 			}
+			/** Almacenamos la info devuelta por el JDBC.*/
 			while (results.next()) {
 				String idProducto = results.getString(1);
 			    listado.add(idProducto);
@@ -235,6 +251,7 @@ public final class SGBD {
 				String sinopsis = results.getString(11);
 				listado.add(sinopsis);
 				int i=11;
+				/** En funcion de la consulta, obtenemos una info u otra.*/
 				if ((tipo.compareTo("Pelicula") == 0) ||
 					((tipo.compareTo("Todo") == 0) &&
 						(idProducto.compareTo(results.getString(12)) == 0))) {
@@ -256,7 +273,7 @@ public final class SGBD {
 					String companya = results.getString(++i);
 					listado.add(companya);
 				}
-				
+				/** Delimitador entre tuplas de info.*/
 				listado.add("#$#");
 				i++;
 			}
@@ -266,28 +283,33 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeRS_STMT_CON(results,stmt,conn);
 		}
 		return listado;
 	}
 
 	private static ArrayList<String> consultarCliente (String usuario, String parametros) {
+		/** Ejecutamos la consulta de clientes correspondiente sobre la BD.*/
 		ArrayList<String> listado = new ArrayList<String>();
 		Statement stmt = null;
 		ResultSet results = null;
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 
-			if (usuario.compareTo("Cliente") == 0) {
+			if (usuario.compareTo("Cliente") == 0) { /**Somos clientes.*/
 				String argumentos[] = CajonSastre.CortarString(parametros);
 				results = stmt.executeQuery("SELECT * FROM ESHOP.USUARIO AS US " +
 				                                "WHERE (US.IDUSUARIO='" + argumentos[2] + "')");
 			}
-			else {// Somos Admins, queremos consultar el listado de TODOS los clientes y admin
+			else {/** Somos Administradores, queremos consultar
+			          el listado de TODOS los clientes.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.USUARIO");
 			}
-			
+
+			/** Almacenamos la info devuelta por el JDBC.*/
 			while (results.next()) {
 				String idUsuario = results.getString(1);
 				listado.add(idUsuario);
@@ -309,6 +331,7 @@ public final class SGBD {
 			    listado.add(email);
 			    int bonificado = results.getInt(10);
 			    listado.add(Integer.toString(bonificado));
+			    /** Delimitador entre tuplas de info.*/
 				listado.add("#$#");
 			}
 			return listado;
@@ -317,82 +340,91 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeRS_STMT_CON(results,stmt,conn);
 		}
 		return listado;
 	}
 	
 	private static ArrayList<String> consultarPedido (String usuario, String parametros) {
+		/** Ejecutamos la consulta de pedidos correspondiente sobre la BD.*/
 		ArrayList<String> listado = new ArrayList<String>();
 		Statement stmt = null;
 		ResultSet results = null;
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
 
-			if (usuario.compareTo("Cliente") == 0) {
+			if (usuario.compareTo("Cliente") == 0) { /**Somos clientes.*/
 				results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 				                                "WHERE (PE.IDUSUARIO='" + argumentos[2] + "')");
 			}
-			else {// Somos Admins, queremos consultar el listado de TODOS los pedidos
-				if (argumentos[3].compareTo("Fecha") == 0) {
-					if (!(argumentos[4].isEmpty())) { // Hay limite inferior
-						if (argumentos.length == 6) { // Hay limite superior
+			else {/** Somos Administradores, queremos consultar
+		          el listado de TODOS los clientes.*/
+				if (argumentos[3].compareTo("Fecha") == 0) { /** Buscamos solo en un periodo
+				                                                 temporal concreto.*/
+					if (!(argumentos[4].isEmpty())) { /** Hay limite inferior.*/
+						if (argumentos.length == 6) { /** Hay limite superior.*/
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 									"WHERE ((PE.FECHAPEDIDO>" + argumentos[4] +
 									") AND (PE.FECHAPEDIDO<" + argumentos[5] + "))");	
 						}
-						else { // Hay limite inferior, no hay superior
+						else { /** Hay limite inferior, no hay superior.*/
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 									"WHERE (PE.FECHAPEDIDO>" + argumentos[4] + ")");
 						}
 					}
-					else { // No hay limite inferior
-						if (!(argumentos[5].isEmpty())) { // Hay limite superior
+					else { /** No hay limite inferior.*/
+						if (!(argumentos[5].isEmpty())) { /** Hay limite superior.*/
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 									"WHERE (PE.FECHAPEDIDO<" + argumentos[5] + ")");							
 						}
-						else { // No hay superior
+						else { /** No hay superior.*/
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO");
 						}
 					}
 				}
-				else if (argumentos[3].compareTo("Importe") == 0) {
-					if (!(argumentos[4].isEmpty())) { // Hay limite inferior
-						if (!(argumentos[5].isEmpty())) { // Hay limite superior
+				else if (argumentos[3].compareTo("Importe") == 0) { /** Buscamos solo en un intervalo
+                    													de precios concreto.*/
+					if (!(argumentos[4].isEmpty())) { /** Hay limite inferior.*/
+						if (!(argumentos[5].isEmpty())) { /** Hay limite superior.*/
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 									"WHERE ((.PE.IMPORTE>" + argumentos[4] +
 									") AND (PE.IMPORTE<" + argumentos[5] + "))");							
 						}
-						else { // Hay limite inferior, no hay superior
+						else { /** Hay limite inferior, no hay superior.*/
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 									"WHERE (PE.IMPORTE>" + argumentos[4] + ")");
 						}
 					}
-					else { // No hay limite inferior
-						if (!(argumentos[5].isEmpty())) { // Hay limite superior
+					else { /** No hay limite inferior.*/
+						if (!(argumentos[5].isEmpty())) { /** Hay limite superior.*/
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 									"WHERE (PE.IMPORTE<" + argumentos[5] + ")");							
 						}
-						else { // No hay limite superior
+						else { /** No hay limite superior.*/
 							results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO");
 						}
 					}
 				}
-				else if (argumentos[3].compareTo("Estado") == 0) {
+				else if (argumentos[3].compareTo("Estado") == 0) { /** Buscamos solo en un estado
+																	   concreto.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 												"WHERE (PE.ESTADO='" + argumentos[4] + "')");
 				}
-				else if (argumentos[3].compareTo("Cliente") == 0) {
+				else if (argumentos[3].compareTo("Cliente") == 0) { /** Buscamos solo en un cliente
+																		concreto.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
 												"WHERE (PE.IDUSUARIO='" + argumentos[4] + "')");
 				}
-				else { //
+				else { /** Buscamos todos los pedidos realizados.*/
 					results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO");
 				}
 			}
-			
+
+			/** Almacenamos la info devuelta por el JDBC.*/
 			while (results.next()) {
 				String idPedido = results.getString(1);
 			    listado.add(idPedido);
@@ -412,6 +444,7 @@ public final class SGBD {
 			    listado.add(CIF_NIF);
 			    String idUsuario = results.getString(9);
 			    listado.add(idUsuario);
+			    /** Delimitador entre tuplas de info.*/
 				listado.add("#$#");
 			}
 			return listado;
@@ -420,36 +453,41 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeRS_STMT_CON(results,stmt,conn);
 		}
 		return listado;
 	}
 	
 	private static ArrayList<String> consultarProductosPedido (String usuario, String parametros) {
+		/** Ejecutamos la consulta de productos pedidos correspondiente sobre la BD.*/
 		ArrayList<String> listado = new ArrayList<String>();
 		Statement stmt = null;
 		ResultSet results = null;
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
 
-			if (usuario.compareTo("Cliente") == 0) {
+			if (usuario.compareTo("Cliente") == 0) { /**Somos clientes.*/
 				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO AS PP, ESHOP.PEDIDO AS PE," +
 											"ESHOP.CLIENTE AS CL WHERE ((PP.IDPEDIDO" +
 											"=PE.IDPEDIDO) AND (PE.IDUSUARIO='" +
 											argumentos[0] + "'))");
 			}
-			// Somos Admins, queremos consultar el listado de productos asociados a un pedido concreto
+			/** Somos Administradores, queremos consultar el listado de productos asociados
+			    a un pedido concreto.*/
 			else if (argumentos.length == 2) {
 				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO AS PP " +
 											"WHERE (PP.IDPEDIDO='" + argumentos[1] + "')");
 			}
-			else { // Somos Admins, queremos el listado completo.
+			else { /** Somos Administradores, queremos el listado completo.*/
 				results = stmt.executeQuery("SELECT * FROM ESHOP.PRODUCTOSPEDIDO AS PP, " + 
 						                    "ESHOP.PEDIDO AS PE WHERE (PP.IDPEDIDO=PE.IDPEDIDO)");
 			}
-			
+
+			/** Almacenamos la info devuelta por el JDBC.*/
 			while (results.next()) {
 				String idPedido = results.getString(1);
 			    listado.add(idPedido);
@@ -465,15 +503,18 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeRS_STMT_CON(results,stmt,conn);
 		}
 		return listado;
 	}
 	
 	private static boolean consultarIDPedido (String idPedido) {
+		/** Ejecutamos la consulta de un pedido concreto sobre la BD.*/
 		Statement stmt = null;
 		ResultSet results = null;
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 			results = stmt.executeQuery("SELECT * FROM ESHOP.PEDIDO AS PE " +
@@ -489,16 +530,19 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeRS_STMT_CON(results,stmt,conn);
 		}
 		return true;
 	}
 	
 	private static int anyadirProducto (String tipo, String usuario, String parametros) {
+		/** Anyadimos un nuevo producto a la BD.*/
 		Statement stmt = null;
 		try {
 			if (usuario.compareTo("Administrador") == 0) {
 				int value;
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
@@ -515,7 +559,7 @@ public final class SGBD {
 					return -1;
 				}
 				
-				if (tipo.compareTo("Pelicula") == 0) {
+				if (tipo.compareTo("Pelicula") == 0) { /** Se trata de una pelicula.*/
 					int index= 0;
 					for (int i= 0; i < 11; i++) {
 						index= parametros.indexOf("#", index);
@@ -525,9 +569,10 @@ public final class SGBD {
 					parametrosPE = parametrosPE.concat(argumentos[0]);
 					parametrosPE = parametrosPE.concat("#");
 					parametrosPE = parametrosPE.concat(parametros.substring(index));
+					/** Anyadimos los atributos caracteristicos de las peliculas.*/
 					value = anyadirProducto_PE(parametrosPE);
 				}
-				else { // tipo = "Videojuego"
+				else { /** Se trata de un videojuego.*/
 					int index= 0;
 					for (int i= 0; i < 11; i++) {
 						index= parametros.indexOf("#", index);
@@ -537,6 +582,7 @@ public final class SGBD {
 					parametrosVI = parametrosVI.concat(argumentos[0]);
 					parametrosVI = parametrosVI.concat("#");
 					parametrosVI = parametrosVI.concat(parametros.substring(index));
+					/** Anyadimos los atributos caracteristicos de los videojuegos.*/
 					value = anyadirProducto_VI(parametrosVI);
 				}
 				
@@ -555,12 +601,14 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 
 	private static int anyadirProducto_PE (String parametros) {
+		/** Anyadimos una nueva pelicula a la BD.*/
 		Statement stmt = null;
 		try {
 			int value;
@@ -582,12 +630,14 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;	
 	}
 	
 	private static int anyadirProducto_VI (String parametros) {
+		/** Anyadimos un nuevo videojuego a la BD.*/
 		Statement stmt = null;
 		try {
 			int value;
@@ -609,6 +659,7 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		System.out.print("FAIL!");
@@ -616,11 +667,14 @@ public final class SGBD {
 	}	
 	
 	private static int anyadirCliente (String usuario, String parametros) {
+		/** Anyadimos un nuevo cliente a la BD.*/
 		Statement stmt = null;
 		try {
 			String argumentos[] = CajonSastre.CortarString(parametros);
-			if (usuario.compareTo("Administrador") == 0) {
+			if (usuario.compareTo("Administrador") == 0) { /** El nuevo cliente
+			                                    en realidad es un administrador.*/
 				int value;
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				value = stmt.executeUpdate("INSERT INTO ESHOP.USUARIO" +
@@ -641,6 +695,7 @@ public final class SGBD {
 			}
 			else if (argumentos[2].compareTo("F") == 0) {
 				int value;
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				value = stmt.executeUpdate("INSERT INTO ESHOP.USUARIO" +
@@ -667,15 +722,18 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	private static int anyadirPedido (String usuario, String parametros) {
+		/** Anyadimos un nuevo pedido a la BD.*/
 		Statement stmt = null;
 		int value;
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
@@ -699,15 +757,18 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	private static int anyadirProductoPedido (String usuario, String parametros) {
+		/** Anyadimos un nuevo producto a un pedido de la BD.*/
 		Statement stmt = null;
 		int value;
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
@@ -727,15 +788,18 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 
 	private static int modificarProducto (String tipo, String usuario, String parametros) {
+		/** Modificamos los atributos de un producto de la BD.*/
 		Statement stmt = null;
 		try {
 			if (usuario.compareTo("Administrador") == 0) {
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
@@ -747,13 +811,14 @@ public final class SGBD {
 						   		   argumentos[7] + "', FICHERO='" + argumentos[8] + "', FECHA=" +
 						   		   argumentos[9] + ", SINOPSIS='" + argumentos[10] +
 						   		   "' WHERE (IDPRODUCTO='" + argumentos[0] + "')");
-				if (tipo.compareTo("Pelicula") == 0) {
+				if (tipo.compareTo("Pelicula") == 0) { /** Modificamos los atributos caracteristicos
+				                                           de la pelicula.*/
 					stmt.executeUpdate("UPDATE ESHOP.PELICULA " +
 									   "SET SOPORTE='" + argumentos[11] + "', DIRECTOR='" +
 									   argumentos[12] + "', ACTORES='" + argumentos[13] + "'" +
 									   "WHERE (IDPRODUCTO='" + argumentos[0] + "')");
 				}
-				else { // Videojuegos
+				else { /** Modificamos los atributos caracteristicos del videojuego.*/
 					stmt.executeUpdate("UPDATE ESHOP.VIDEOJUEGO " +
 									   "SET PLATAFORMA='" + argumentos[11] + "', COMPANYA='" +
 									   argumentos[12] + "' WHERE (IDPRODUCTO='" + argumentos[0] + "')");
@@ -768,16 +833,19 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	private static int modificarCliente (String usuario, String parametros) {
+		/** Modificamos los atributos de un cliente de la BD.*/
 		Statement stmt = null;
 		try {
 			String argumentos[] = CajonSastre.CortarString(parametros);
 			if ((usuario.compareTo("Administrador") == 0) || (argumentos[0].compareTo(argumentos[1]) == 0)) {
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				stmt.executeUpdate("UPDATE ESHOP.USUARIO " +
@@ -798,15 +866,18 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	private static int modificarPedido (String usuario, String parametros) {
+		/** Modificamos los atributos de un pedido de la BD.*/
 		Statement stmt = null;
 		try {
 			if (usuario.compareTo("Administrador") == 0) {
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
@@ -827,15 +898,18 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 
 	private static int modificarProductosPedido (String usuario, String parametros) {
+		/** Modificamos los atributos de un producto asociado a un pedido de la BD.*/
 		Statement stmt = null;
 		try {
 			if (usuario.compareTo("Administrador") == 0) {
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
@@ -843,9 +917,11 @@ public final class SGBD {
 								   "SET CANTIDAD=" + argumentos[2] + " WHERE ((IDPEDIDO='" +
 								   argumentos[0] + "') AND (IDPRODUCTO='" + argumentos[1] +"'))");
 				if (Integer.parseInt(argumentos[2]) == 0) {
+					/** Estamos eliminado el producto del pedido.*/
 					eliminarProductosPedido_PR(usuario, parametros);
 				}
 				if (!(consultarIDPedido(argumentos[0]))) {
+					/** El pedido esta vacio, borramos las entradas de la tabla ProductosPedido.*/
 					eliminarPedido(usuario, argumentos[0]);
 				}
 				return 0;
@@ -858,15 +934,18 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	private static int eliminarProducto (String usuario, String parametros) {
+		/** Eliminamos un producto de la BD.*/
 		Statement stmt = null;
 		try {
-			if (usuario.compareTo("Administrador") == 0) {
+			if (usuario.compareTo("Administrador") == 0) { /** Somos administradores.*/
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
@@ -886,18 +965,21 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	private static int eliminarCliente (String usuario, String parametros) {
+		/** Eliminamos un cliente de la BD.*/
 		ResultSet results = null;
 		Statement stmt = null;
 		ArrayList<String> bar = null;
 		try {
-			if (usuario.compareTo("Administrador") == 0) {
+			if (usuario.compareTo("Administrador") == 0) { /** Somos administradores.*/
 				bar = new ArrayList<String>();
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
@@ -906,14 +988,17 @@ public final class SGBD {
 											"WHERE ((PE.IDUSUARIO='" + argumentos[0] +
 							      			"') AND (PP.IDPEDIDO=PE.IDPEDIDO))");
 				int i = 1;
+				
 				while (results.next()) {
 					String idPedido = results.getString(i);
 					bar.add(idPedido);
 				}
+				/** Eliminamos las entradas correspondientes en la tabla ProductosPedido.*/
 				for (i = 0; i < bar.size(); i++) {
 					stmt.executeUpdate("DELETE FROM ESHOP.PRODUCTOSPEDIDO AS PP " +
 									   "WHERE (ESHOP.PP.IDPEDIDO='" + bar.get(i) + "')");
 				}
+				/** Eliminamos todos los pedidos asociados a dicho cliente.*/
 				for (i = 0; i < bar.size(); i++) {
 					stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO AS PE " +
 									   "WHERE (PE.IDPEDIDO='" + bar.get(i) + "')");
@@ -932,18 +1017,22 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	private static int eliminarPedido (String usuario, String parametros) {
+		/** Eliminamos un pedido de la BD.*/
 		Statement stmt = null;
 		try {
 			if (usuario.compareTo("Administrador") == 0) {
+				/** Establecemos la conexion con la BD.*/
 				getConnection();
 				stmt = conn.createStatement();
 				String argumentos[] = CajonSastre.CortarString(parametros);
+				/** Eliminamos los productos asociados a dicho pedido.*/
 				if (eliminarProductosPedido_PE(parametros) == 0) {
 					stmt.executeUpdate("DELETE FROM ESHOP.PEDIDO AS PE " +
 							   "WHERE (PE.IDPEDIDO='" + argumentos[0] + "')");
@@ -962,14 +1051,17 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 
 	private static int eliminarProductosPedido_PE (String parametros) {
+		/** Eliminamos los productos asociados al producto que estamos eliminando de la BD.*/
 		Statement stmt = null;
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
@@ -981,14 +1073,18 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	private static int eliminarProductosPedido_PR (String usuario, String parametros) {
+		/** Eliminamos un producto determinado asociado al producto que estamos
+		    eliminando de la BD.*/
 		Statement stmt = null;
 		try {
+			/** Establecemos la conexion con la BD.*/
 			getConnection();
 			stmt = conn.createStatement();
 			String argumentos[] = CajonSastre.CortarString(parametros);
@@ -1001,23 +1097,29 @@ public final class SGBD {
 			e.printStackTrace();
 		}
 		finally {
+			/** Cerramos la conexion con la BD y liberamos recursos.*/
 			closeSTMT_CON(stmt,conn);
 		}
 		return -1;
 	}
 	
 	public static ArrayList<String> consultar (String objeto, String usuario, String parametros) {
+		/** Realizamos una consulta sobre la BD.*/
 		ArrayList<String> lista = new ArrayList<String>();
-		
+
+		/** La consulta es sobre productos.*/
 		if (objeto.compareTo("Producto") == 0) {
 			lista = consultarProducto(parametros);			
 		}
+		/** La consulta es sobre clientes.*/
 		else if (objeto.compareTo("Cliente") == 0) {
 			lista = consultarCliente(usuario, parametros);
 		}
+		/** La consulta es sobre pedidos.*/
 		else if (objeto.compareTo("Pedido") == 0) {
 			lista = consultarPedido(usuario, parametros);
 		}
+		/** La consulta es sobre productos asociados a pedidos.*/
 		else {
 			lista = consultarProductosPedido(usuario, parametros);
 		}
@@ -1026,18 +1128,26 @@ public final class SGBD {
 	}
 
 	public static int anyadir (String objeto, String usuario, String parametros) {
-		int value;
+		/** Anyadimos un elemento a la BD.
+		    Dev: -1 en caso de error.
+		          0 si se ha anyadido correctamente.
+		 */
 		
+		int value;
+
+		/** Vamos a anyadir un producto.*/
 		if ((objeto.compareTo("Pelicula") == 0) || (objeto.compareTo("Videojuego") == 0)) {
 			value = anyadirProducto(objeto, usuario, parametros);
 		}
+		/** Vamos a anyadir un cliente.*/
 		else if (objeto.compareTo("Cliente") == 0) {
 			value = anyadirCliente(usuario, parametros);
 		}
+		/** Vamos a anyadir un pedido.*/
 		else if (objeto.compareTo("Pedido") == 0) {
 			value = anyadirPedido(usuario, parametros);
 		}
-		else { // Anyadimos a ProductosPedido
+		else { /** Vamos a anyadir un producto a un pedido determinado.*/
 			value = anyadirProductoPedido(usuario, parametros);
 		}
 		
@@ -1045,18 +1155,25 @@ public final class SGBD {
 	}
 
 	public static int modificar (String objeto, String usuario, String parametros) {
+		/** Modificamos los atributos de un elemento de la BD.
+			Dev: -1 en caso de error.
+		          0 si se ha anyadido correctamente.
+		*/
 		int value;
-		
+
+		/** Las modificaciones se realizaran sobre un producto.*/
 		if ((objeto.compareTo("Pelicula") == 0) || (objeto.compareTo("Videojuego") == 0)) {
 			value = modificarProducto(objeto,usuario, parametros);
 		}
+		/** Las modificaciones se realizaran sobre un cliente.*/
 		else if (objeto.compareTo("Cliente") == 0) {
 			value = modificarCliente(usuario, parametros);
 		}
+		/** Las modificaciones se realizaran sobre un pedido.*/
 		else if (objeto.compareTo("Pedido") == 0) {
 			value = modificarPedido(usuario, parametros);
 		}
-		else { // ProductosAPedidos.
+		else { /** Las modificaciones se realizaran sobre un producto asociado a un pedido.*/
 			value = modificarProductosPedido(usuario, parametros);
 		}
 		
@@ -1064,18 +1181,25 @@ public final class SGBD {
 	}
 	
 	public static int eliminar (String objeto, String usuario, String parametros) {
+		/** Eliminamos un elemento de la BD.
+			Dev: -1 en caso de error.
+		          0 si se ha anyadido correctamente.
+		*/
 		int value;
-		
+
+		/** Eliminamos un producto.*/
 		if (objeto.compareTo("Producto") == 0) {
 			value = eliminarProducto(usuario, parametros);
 		}
+		/** Eliminamos un cliente.*/
 		else if (objeto.compareTo("Cliente") == 0) {
 			value = eliminarCliente(usuario, parametros);
 		}
+		/** Eliminamos un pedido.*/
 		else if (objeto.compareTo("Pedido") == 0) {
 			value = eliminarPedido(usuario, parametros);
 		}
-		else { // Eliminamos ProductosPedido
+		else { /** Eliminamos un producto asociado a un pedido.*/
 			value = eliminarProductosPedido_PR(usuario, parametros);
 		}
 		
