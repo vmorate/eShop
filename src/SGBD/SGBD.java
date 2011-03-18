@@ -1,5 +1,6 @@
 package SGBD;
 
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.lang.Exception;
@@ -7,7 +8,7 @@ import cajonSastre.CajonSastre;
 
 public final class SGBD {
 	private final static String DRIVER_CLASS_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
-	private final static String DRIVER_URL = "jdbc:derby:bd; create=true; user=admin; password=1234";
+	private static String DRIVER_URL = "jdbc:derby:bd; create=true; user=admin; password=1234";
 	private final static String USER = "admin";
 	private final static String PASSWORD = "1234";
 
@@ -25,13 +26,71 @@ public final class SGBD {
 
 	}
 
-	private static final void getConnection() {
+	private static void getConnection() throws SQLException {
+		conn = DriverManager.getConnection(DRIVER_URL, USER, PASSWORD);
+	}
+	
+	private static void loadSQLScript(String file) throws SQLException {
+    	String str = new String();
+        StringBuffer sb = new StringBuffer();  
+   
+        try {
+        	FileReader fr = new FileReader(new File(file));
+            BufferedReader br = new BufferedReader(fr);  
+            while((str = br.readLine()) != null) {  
+            	sb.append(str);
+            }
+            br.close();
+            // split each statement
+            String[] inst = sb.toString().split(";");
+            getConnection();
+            Statement stmt = conn.createStatement();  
+            for(int i = 0; i<inst.length; i++) {
+            	// ensure that there is no spaces before or after the request string  
+                // in order to not execute empty statements
+            	if(!inst[i].trim().equals("")) {
+            		stmt.executeUpdate(inst[i]);
+                    System.out.println(">>"+inst[i]);
+            	}
+            }
+        }
+        catch(FileNotFoundException e1) {
+        	e1.printStackTrace();
+        }
+        catch(IOException e2) {
+        	e2.printStackTrace();
+        }
+	}
+	
+    public static void resetDatabase() throws SQLException {
+    	System.out.println("Lanzamos el script para resetear la BD");
+    	try {
+    		loadSQLScript("scripts/ResetBD.sql");
+    	}
+    	catch (SQLException e) {
+    		if (e.toString().indexOf("Schema 'ESHOP' does not exist") <= 0) {
+    			e.printStackTrace();
+    		}
+    	}
+    	finally {
+    		try {
+    			loadSQLScript("scripts/CreateBD.sql");
+    		}
+    		catch (SQLException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    }
+     
+	public static int setDriverURL(String directorio) {
+		DRIVER_URL = "jdbc:derby:" + directorio + "; create=true; user=admin; password=1234";
 		try {
-			conn = DriverManager.getConnection(DRIVER_URL, USER, PASSWORD);
+			getConnection();
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (SQLException e) {
+			return -1;
 		}
+		return 0;
 	}
 	
 	private static void closeRS_STMT_CON(ResultSet rs, Statement stmt, Connection con) {

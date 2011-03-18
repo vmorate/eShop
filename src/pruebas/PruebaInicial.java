@@ -27,6 +27,7 @@ public final class PruebaInicial {
 	}
 	
 	public static void main (String[] args) {
+		boolean resetBD = true;
 		boolean insercionProductos = true;
 		boolean insercionClientes = true;
 		boolean insercionPedido = true;
@@ -46,6 +47,9 @@ public final class PruebaInicial {
 		try{ 
 			ArrayList<String> bar = null;
 			int value;
+			if (resetBD) {
+				SGBD.resetDatabase();
+			}
 			if (insercionProductos) {
 				System.out.print("Iniciamos la insercion de productos...\n");
 				String pelicula1 = new String("1#F#10#0#0#25#Genero1#Titulo1#/dir/primero#123456#Sinopsis1#DVD#Director1#Actor1, Actor2, Actor3");
