@@ -1,8 +1,8 @@
 ----------------------------------------------------------------
-2011-03-18 21:42:09.724 GMT:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.6.2.1 - (999685): instance a816c00e-012e-caeb-1dd5-000003524fd0 
-on database directory C:\Users\Familia Merino\Documents\Universidad\Carrera\LabProg\eShop\bd  with class loader sun.misc.Launcher$AppClassLoader@138d107f 
-Loaded from file:/C:/Users/Familia%20Merino/Documents/Universidad/Carrera/LabProg/eShop/lib/derby.jar
+2011-03-29 13:05:50.398 GMT:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.6.2.1 - (999685): instance a816c00e-012f-01b8-5cb2-000000495928 
+on database directory C:\Documents and Settings\Administrador\Mis documentos\LabProg\eShop\bd  with class loader sun.misc.Launcher$AppClassLoader@11b86e7 
+Loaded from file:/C:/Documents%20and%20Settings/Administrador/Mis%20documentos/LabProg/eShop/lib/derby.jar
 java.vendor=Sun Microsystems Inc.
-java.runtime.version=1.6.0_22-b04
+java.runtime.version=1.6.0_06-b02
 Database Class Loader started - derby.database.classpath=''
